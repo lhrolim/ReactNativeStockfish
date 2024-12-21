@@ -52,14 +52,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/loloof64/loloof64-react-native-stockfish.git"
+    "url": "git+https://github.com/loloof64/ReactNativeStockfish.git"
   },
   "author": "laurent bernabe <laurent.bernabe@gmail.com> (https://github.com/loloof64)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/loloof64/loloof64-react-native-stockfish/issues"
+    "url": "https://github.com/loloof64/ReactNativeStockfish/issues"
   },
-  "homepage": "https://github.com/loloof64/loloof64-react-native-stockfish#readme",
+  "homepage": "https://github.com/loloof64/ReactNativeStockfish#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
