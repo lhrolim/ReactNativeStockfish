@@ -39,7 +39,13 @@ Pod::Spec.new do |s|
     end
   end
 
-  s.prepare_command = <<-CMD
-    ruby download_dependencies.rb
-  CMD
+  s.script_phase = {
+    :name => "Download NNUE files",
+    :script => <<-SCRIPT
+      NNUE_NAME_BIG  = "nn-1111cefa1111.nnue"
+      NNUE_NAME_SMALL = "nn-37f18f62d772.nnue"
+      curl -o ${PODS_ROOT}/${NNUE_NAME_BIG} https://tests.stockfishchess.org/api/nn/${NNUE_NAME_BIG}
+      curl -o ${PODS_ROOT}/${NNUE_NAME_SMALL} https://tests.stockfishchess.org/api/nn/${NNUE_NAME_SMALL}
+    SCRIPT
+  }
 end
