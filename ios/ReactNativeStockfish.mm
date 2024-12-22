@@ -1,78 +1,76 @@
 #import "ReactNativeStockfish.h"
-#import <React/RCTEventEmitter.h>
-#import <thread>
-#import <atomic>
+#import <React/RCTLog.h>
 
 @implementation ReactNativeStockfish {
-    std::thread stockfishMainThread;
-    std::thread stockfishOutputThread;
-    std::atomic<bool> stopStockfishLoop;
+    dispatch_queue_t mainQueue;
+    dispatch_queue_t readerQueue;
+    BOOL isStockfishRunning;
 }
 
-// Declare React Native module
+// Load stockfish native library
++ (void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dlopen("loloof64-react-native-stockfish.dylib", RTLD_NOW | RTLD_GLOBAL);
+    });
+}
+
 RCT_EXPORT_MODULE();
 
-// Load stockfish library
-+ (void)initialize {
-    [super initialize];
-    dlopen("loloof64-react-native-stockfish.dylib", RTLD_NOW | RTLD_GLOBAL);
+- (instancetype)init {
+    if (self = [super init]) {
+        mainQueue = dispatch_queue_create("com.reactnativestockfish.main", DISPATCH_QUEUE_SERIAL);
+        readerQueue = dispatch_queue_create("com.reactnativestockfish.reader", DISPATCH_QUEUE_SERIAL);
+        isStockfishRunning = NO;
+    }
+    return self;
 }
 
-// Define native methods exposed by the module
-extern "C" {
-    void main();
-    const char* stdoutRead();
-    void stdinWrite(const char* command);
+// Supported events
+- (NSArray<NSString *> *)supportedEvents {
+    return @[@"stockfish-output", @"stockfish-error"];
 }
 
-// Start stockfish threads
+// Starts Stockfish main loop
 RCT_EXPORT_METHOD(stockfishLoop) {
-    stopStockfishLoop.store(false);
-
-    // main function thread
-    stockfishMainThread = std::thread([]() {
+    isStockfishRunning = YES;
+    dispatch_async(mainQueue, ^{
         main();
     });
 
-    // stockfish output thread
-    stockfishOutputThread = std::thread([this]() {
-        while (!stopStockfishLoop.load()) {
-            const char* output = stdoutRead();
-            if (output && strlen(output) > 0) {
-                NSString *outputString = [NSString stringWithUTF8String:output];
-                [self sendEventWithName:@"stockfish-output" body:outputString];
+    // Read stdout
+    dispatch_async(readerQueue, ^{
+        while (isStockfishRunning) {
+            const char *output = stdoutRead();
+            if (output) {
+                [self sendEventWithName:@"stockfish-output" body:@(output)];
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            [NSThread sleepForTimeInterval:0.1];
+        }
+    });
+
+    // Read stderr
+    dispatch_async(readerQueue, ^{
+        while (isStockfishRunning) {
+            const char *error = stderrRead();
+            if (error) {
+                [self sendEventWithName:@"stockfish-error" body:@(error)];
+            }
+            [NSThread sleepForTimeInterval:0.1];
         }
     });
 }
 
-// send command to stockfish
+// Send a command to Stockfish
 RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
-    const char *commandCStr = [command UTF8String];
-    stdinWrite(commandCStr);
+    const char *nativeCommand = [command UTF8String];
+    stdinWrite(nativeCommand);
 }
 
-// stop stockfish and clean threads
+// Stop Stockfish
 RCT_EXPORT_METHOD(stopStockfish) {
-    stopStockfishLoop.store(true);
-
-    // stop stockfish properly
-    const char *quitCommand = "quit\n";
-    stdinWrite(quitCommand);
-
-    // wait for threads to finish
-    if (stockfishMainThread.joinable()) {
-        stockfishMainThread.join();
-    }
-    if (stockfishOutputThread.joinable()) {
-        stockfishOutputThread.join();
-    }
-}
-
-// list supported events for javascript
-- (NSArray<NSString *> *)supportedEvents {
-    return @[@"stockfish-output"];
+    isStockfishRunning = NO;
+    [self sendCommandToStockfish:@"quit\n"];
 }
 
 @end

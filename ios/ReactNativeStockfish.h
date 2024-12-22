@@ -3,7 +3,10 @@
 #endif
 
 #import "generated/RNReactNativeStockfishSpec/RNReactNativeStockfishSpec.h"
+#import <React/RCTEventEmitter.h>
 
-@interface ReactNativeStockfish : NSObject <NativeReactNativeStockfishSpec>
+// also add events manager
+@interface ReactNativeStockfish : RCTEventEmitter <NativeReactNativeStockfishSpec>
 
 @end
+
