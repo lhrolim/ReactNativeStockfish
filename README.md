@@ -2,6 +2,9 @@
 
 Use stockfish chess engine in your React Native application
 
+Be careful : though IOS code has been implemented, it has not been tested.
+You may want to adjust the code to make it pass. (I'm open to pull request)
+
 ## Installation
 
 ```sh
