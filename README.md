@@ -52,7 +52,7 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 If you need to upgrade Stockfish source files, you need to make some more adaptive works :
 
-- replace all calls to `cout << #SomeContent# << endl` by `fakeout << #SomeContent# << fakeendl` (And ajust also calls to `cout.rdbuf()` by `fakeout.rdbuf()`)
+- replace all calls to `cout << #SomeContent# << endl` by `fakeout << #SomeContent# << fakeendl` (And ajust also calls to `cout.rdbuf()` by `fakeout.rdbuf()`) **But do not replace calls to sync_cout**.
 - add include to **../../fixes/fixes.h** in all related files (and adjust the include path accordingly)
 - proceed accordingly for `cin`.
 - in **misc.h** replace
