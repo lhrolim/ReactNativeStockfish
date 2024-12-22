@@ -71,7 +71,7 @@ with
 
 and include **../../fixes/fixes.h**
 
-- change the NNUE defined in **android/CmakeLists.txt** by the one defined in **stockfish/src/evaluate.h**
+- Now we need to get rid of the big NNUE downloaded by default by Stockfish
 
 ## License
 
