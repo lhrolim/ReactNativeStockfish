@@ -27,7 +27,7 @@
 
 using namespace Stockfish;
 
-#include "../../fixes/fixes.h"
+#include "../fixes/fixes.h"
 
 int main(int argc, char* argv[]) {
 

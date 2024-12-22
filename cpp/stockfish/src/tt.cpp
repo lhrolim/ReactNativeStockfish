@@ -29,7 +29,7 @@
 #include "syzygy/tbprobe.h"
 #include "thread.h"
 
-#include "../../fixes/fixes.h"
+#include "../fixes/fixes.h"
 
 namespace Stockfish {
 

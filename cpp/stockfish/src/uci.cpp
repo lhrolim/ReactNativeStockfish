@@ -37,7 +37,7 @@
 #include "types.h"
 #include "ucioption.h"
 
-#include "../../fixes/fixes.h"
+#include "../fixes/fixes.h"
 
 namespace Stockfish {
 

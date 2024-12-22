@@ -16,7 +16,7 @@ file(COPY ../cpp/${NNUE_NAME_SMALL} DESTINATION ${CMAKE_BINARY_DIR})
 
 # Include stockfish sources and fixes
 file(GLOB_RECURSE stockfishCppPaths "../cpp/stockfish/src/*.cpp")
-file(GLOB_RECURSE stockfishFixesPaths "../cpp/fixes/*.cpp")
+file(GLOB_RECURSE stockfishFixesPaths "../cpp/stockfish/fixes/*.cpp")
 
 
 add_library(loloof64-react-native-stockfish            SHARED
@@ -29,7 +29,7 @@ add_library(loloof64-react-native-stockfish            SHARED
 # Specifies a path to native header files.
 include_directories(
             ../cpp
-            ../cpp/fixes
+            ../cpp/stockfish/fixes
             ../cpp/stockfish/src
             ../cpp/stockfish/src/incbin
             ../cpp/stockfish/src/nnue

@@ -59,12 +59,15 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 ### Changing Stockfish source files
 
-If you need to upgrade Stockfish source files, you need to make some more adaptive works :
+If you need to upgrade Stockfish source files, create a folder **stockfish** inside **cpp** folder, copy the **src** folder from the stockfish sources into the new **stockfish folder**. Also you need to make some more adaptive works :
 
 #### Adapting streams
 
+- copy the **cpp/fixes** folder inside the **cpp/stockfish** folder
+
 - replace all calls to `cout << #SomeContent# << endl` by `fakeout << #SomeContent# << fakeendl` (And ajust also calls to `cout.rdbuf()` by `fakeout.rdbuf()`) **But do not replace calls to sync_cout**.
-- add include to **../../fixes/fixes.h** in all related files (and adjust the include path accordingly)
+- copy folder **cpp/fixes** inside the **stockfish** folder
+- add include to **../fixes/fixes.h** in all related files (and adjust the include path accordingly)
 - proceed accordingly for `cin` : replace by `fakein`
 - and the same for `cerr`: replace by `fakeerr`
 - in **misc.h** replace
@@ -85,7 +88,7 @@ and include **../../fixes/fixes.h**
 
 #### Adapting NNUE
 
-In file **CmakeLists.txt** replace the names of big and small NNUE by the ones you can find in file **cpp/stockfish/src/evaluate.h**
+In file **CMakeLists.txt** replace the names of big and small NNUE by the ones you can find in file **cpp/stockfish/src/evaluate.h**
 
 ## License
 

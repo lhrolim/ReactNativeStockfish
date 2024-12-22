@@ -33,7 +33,7 @@
 
 #include "types.h"
 
-#include "../../fixes/fixes.h"
+#include "../fixes/fixes.h"
 
 namespace Stockfish {
 
