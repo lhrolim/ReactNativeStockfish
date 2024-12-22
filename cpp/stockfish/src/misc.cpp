@@ -75,8 +75,8 @@ struct Tie: public std::streambuf {  // MSVC requires split streambuf for cin an
 class Logger {
 
     Logger() :
-        in(fakecin.rdbuf(), file.rdbuf()),
-        out(fakecout.rdbuf(), file.rdbuf()) {}
+        in(fakein.rdbuf(), file.rdbuf()),
+        out(fakeout.rdbuf(), file.rdbuf()) {}
     ~Logger() { start(""); }
 
     std::ofstream file;
@@ -89,8 +89,8 @@ class Logger {
 
         if (l.file.is_open())
         {
-            fakecout.rdbuf(l.out.buf);
-            fakecin.rdbuf(l.in.buf);
+            fakeout.rdbuf(l.out.buf);
+            fakein.rdbuf(l.in.buf);
             l.file.close();
         }
 
@@ -100,12 +100,12 @@ class Logger {
 
             if (!l.file.is_open())
             {
-                std::cerr << "Unable to open debug log file " << fname << std::endl;
+                fakeerr << "Unable to open debug log file " << fname << fakeendl;
                 exit(EXIT_FAILURE);
             }
 
-            fakecin.rdbuf(&l.in);
-            fakecout.rdbuf(&l.out);
+            fakein.rdbuf(&l.in);
+            fakeout.rdbuf(&l.out);
         }
     }
 };
@@ -354,27 +354,27 @@ void dbg_print() {
 
     for (int i = 0; i < MaxDebugSlots; ++i)
         if ((n = hit[i][0]))
-            std::cerr << "Hit #" << i << ": Total " << n << " Hits " << hit[i][1]
-                      << " Hit Rate (%) " << 100.0 * E(hit[i][1]) << std::endl;
+            fakeerr << "Hit #" << i << ": Total " << n << " Hits " << hit[i][1]
+                      << " Hit Rate (%) " << 100.0 * E(hit[i][1]) << fakeendl;
 
     for (int i = 0; i < MaxDebugSlots; ++i)
         if ((n = mean[i][0]))
         {
-            std::cerr << "Mean #" << i << ": Total " << n << " Mean " << E(mean[i][1]) << std::endl;
+            fakeerr << "Mean #" << i << ": Total " << n << " Mean " << E(mean[i][1]) << fakeendl;
         }
 
     for (int i = 0; i < MaxDebugSlots; ++i)
         if ((n = stdev[i][0]))
         {
             double r = sqrt(E(stdev[i][2]) - sqr(E(stdev[i][1])));
-            std::cerr << "Stdev #" << i << ": Total " << n << " Stdev " << r << std::endl;
+            fakeerr << "Stdev #" << i << ": Total " << n << " Stdev " << r << fakeendl;
         }
 
     for (int i = 0; i < MaxDebugSlots; ++i)
         if ((n = extremes[i][0]))
         {
-            std::cerr << "Extremity #" << i << ": Total " << n << " Min " << extremes[i][2]
-                      << " Max " << extremes[i][1] << std::endl;
+            fakeerr << "Extremity #" << i << ": Total " << n << " Min " << extremes[i][2]
+                      << " Max " << extremes[i][1] << fakeendl;
         }
 
     for (int i = 0; i < MaxDebugSlots; ++i)
@@ -383,7 +383,7 @@ void dbg_print() {
             double r = (E(correl[i][5]) - E(correl[i][1]) * E(correl[i][3]))
                      / (sqrt(E(correl[i][2]) - sqr(E(correl[i][1])))
                         * sqrt(E(correl[i][4]) - sqr(E(correl[i][3]))));
-            std::cerr << "Correl. #" << i << ": Total " << n << " Coefficient " << r << std::endl;
+            fakeerr << "Correl. #" << i << ": Total " << n << " Coefficient " << r << fakeendl;
         }
 }
 
@@ -403,8 +403,8 @@ std::ostream& operator<<(std::ostream& os, SyncCout sc) {
     return os;
 }
 
-void sync_cout_start() { std::cout << IO_LOCK; }
-void sync_cout_end() { std::cout << IO_UNLOCK; }
+void sync_cout_start() { fakeout << IO_LOCK; }
+void sync_cout_end() { fakeout << IO_UNLOCK; }
 
 // Trampoline helper to avoid moving Logger to misc.h
 void start_logger(const std::string& fname) { Logger::start(fname); }

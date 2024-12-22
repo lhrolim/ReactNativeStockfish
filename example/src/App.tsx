@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import {
   stockfishLoop,
   subscribeToStockfishOutput,
+  subscribeToStockfishError,
   sendCommandToStockfish,
   stopStockfish,
 } from '@loloof64/react-native-stockfish';
@@ -20,6 +21,14 @@ function useStockfishOutput() {
   useEffect(() => {
     const unsubscribe = subscribeToStockfishOutput((output) => {
       setStockfishOutput((prev) => prev + output);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToStockfishError((error) => {
+      setStockfishOutput((prev) => `${prev}\n@@@\n${error}\n`);
     });
 
     return () => unsubscribe();
@@ -55,7 +64,7 @@ export default function App() {
         <Button
           title="Send"
           onPress={() => {
-            sendCommandToStockfish(command);
+            sendCommandToStockfish(`${command}\n`);
             setCommand('');
           }}
         />

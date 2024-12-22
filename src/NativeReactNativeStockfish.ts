@@ -16,6 +16,13 @@ export const _subscribeToStockfishOutput = (
   return () => subscription.remove();
 };
 
+export const _subscribeToStockfishError = (
+  callback: (output: string) => void
+) => {
+  const subscription = eventEmitter.addListener('stockfish-error', callback);
+  return () => subscription.remove();
+};
+
 export interface Spec extends TurboModule {
   stockfishLoop(): void;
   sendCommandToStockfish(command: string): void;

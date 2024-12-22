@@ -22,6 +22,9 @@ namespace loloof64_reactnativestockfish {
 
   // Reads stockfish output
   char * stockfish_stdout_read();
+
+  // Reads stockfish error
+  char * stockfish_stderr_read();
 }
 
 #endif /* LOLOOF64_REACTNATIVESTOCKFISH_H */

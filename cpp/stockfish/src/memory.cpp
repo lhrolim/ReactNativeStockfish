@@ -20,6 +20,8 @@
 
 #include <cstdlib>
 
+#include "../../fixes/fixes.h"
+
 #if __has_include("features.h")
     #include <features.h>
 #endif
@@ -223,8 +225,8 @@ void aligned_large_pages_free(void* mem) {
     if (mem && !VirtualFree(mem, 0, MEM_RELEASE))
     {
         DWORD err = GetLastError();
-        std::cerr << "Failed to free large page memory. Error code: 0x" << std::hex << err
-                  << std::dec << std::endl;
+        fakeerr << "Failed to free large page memory. Error code: 0x" << std::hex << err
+                  << std::dec << fakeendl;
         exit(EXIT_FAILURE);
     }
 }

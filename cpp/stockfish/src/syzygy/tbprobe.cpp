@@ -44,6 +44,8 @@
 #include "../types.h"
 #include "../ucioption.h"
 
+#include "../../fixes/fixes.h"
+
 #ifndef _WIN32
     #include <fcntl.h>
     #include <sys/mman.h>
@@ -236,7 +238,7 @@ class TBFile: public std::ifstream {
 
         if (statbuf.st_size % 64 != 16)
         {
-            std::cerr << "Corrupt tablebase file " << fname << std::endl;
+            fakeerr << "Corrupt tablebase file " << fname << fakeendl;
             exit(EXIT_FAILURE);
         }
 
@@ -249,7 +251,7 @@ class TBFile: public std::ifstream {
 
         if (*baseAddress == MAP_FAILED)
         {
-            std::cerr << "Could not mmap() " << fname << std::endl;
+            fakeerr << "Could not mmap() " << fname << fakeendl;
             exit(EXIT_FAILURE);
         }
 #else
@@ -265,7 +267,7 @@ class TBFile: public std::ifstream {
 
         if (size_low % 64 != 16)
         {
-            std::cerr << "Corrupt tablebase file " << fname << std::endl;
+            fakeerr << "Corrupt tablebase file " << fname << fakeendl;
             exit(EXIT_FAILURE);
         }
 
@@ -274,7 +276,7 @@ class TBFile: public std::ifstream {
 
         if (!mmap)
         {
-            std::cerr << "CreateFileMapping() failed" << std::endl;
+            fakeerr << "CreateFileMapping() failed" << fakeendl;
             exit(EXIT_FAILURE);
         }
 
@@ -283,8 +285,8 @@ class TBFile: public std::ifstream {
 
         if (!*baseAddress)
         {
-            std::cerr << "MapViewOfFile() failed, name = " << fname
-                      << ", error = " << GetLastError() << std::endl;
+            fakeerr << "MapViewOfFile() failed, name = " << fname
+                      << ", error = " << GetLastError() << fakeendl;
             exit(EXIT_FAILURE);
         }
 #endif
@@ -294,7 +296,7 @@ class TBFile: public std::ifstream {
 
         if (memcmp(data, Magics[type == WDL], 4))
         {
-            std::cerr << "Corrupted table in file " << fname << std::endl;
+            fakeerr << "Corrupted table in file " << fname << fakeendl;
             unmap(*baseAddress, *mapping);
             return *baseAddress = nullptr, nullptr;
         }
@@ -470,7 +472,7 @@ class TBTables {
                 homeBucket = otherHomeBucket;
             }
         }
-        std::cerr << "TB hash table size too low!" << std::endl;
+        fakeerr << "TB hash table size too low!" << fakeendl;
         exit(EXIT_FAILURE);
     }
 

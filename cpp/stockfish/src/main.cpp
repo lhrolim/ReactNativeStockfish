@@ -31,7 +31,7 @@ using namespace Stockfish;
 
 int main(int argc, char* argv[]) {
 
-    fakecout << engine_info() << fakeendl;
+    fakeout << engine_info() << fakeendl;
 
     Bitboards::init();
     Position::init();

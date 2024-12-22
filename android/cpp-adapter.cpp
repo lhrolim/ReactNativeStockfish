@@ -4,6 +4,7 @@
 
 #define STR_SIZE 1024
 char conv_buffer[STR_SIZE + 1];
+char err_conv_buffer[STR_SIZE + 1];
 
 extern "C"
 JNIEXPORT jdouble JNICALL
@@ -41,4 +42,18 @@ Java_com_loloof64_reactnativestockfish_ReactNativeStockfishModule_stdoutRead(JNI
     std::strncpy(conv_buffer, output, STR_SIZE);
 
     return env->NewStringUTF(conv_buffer);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_loloof64_reactnativestockfish_ReactNativeStockfishModule_stderrRead(JNIEnv *env, jclass type) {
+    char *output = loloof64_reactnativestockfish::stockfish_stderr_read();
+    // An error occured
+    if (output == NULL) {
+        return NULL;
+    }
+
+    std::strncpy(err_conv_buffer, output, STR_SIZE);
+
+    return env->NewStringUTF(err_conv_buffer);
 }

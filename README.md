@@ -17,7 +17,8 @@ npm install @loloof64/react-native-stockfish
 import {
   stockfishLoop,
   sendCommandToStockfish,
-  subscribeToStockfishOutput
+  subscribeToStockfishOutput,
+  subscribeToStockfishError,
   stopStockfish,
 } from '@loloof64/react-native-stockfish';
 
@@ -30,6 +31,14 @@ stockfishLoop();
 useEffect(() => {
   const unsubscribe = subscribeToStockfishOutput((output) => {
     console.log('Stockfish Output:', output);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+useEffect(() => {
+  const unsubscribe = subscribeToStockfishError((error) => {
+    console.log('Stockfish Error:', error);
   });
 
   return () => unsubscribe();
@@ -52,9 +61,12 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 If you need to upgrade Stockfish source files, you need to make some more adaptive works :
 
+#### Adapting streams
+
 - replace all calls to `cout << #SomeContent# << endl` by `fakeout << #SomeContent# << fakeendl` (And ajust also calls to `cout.rdbuf()` by `fakeout.rdbuf()`) **But do not replace calls to sync_cout**.
 - add include to **../../fixes/fixes.h** in all related files (and adjust the include path accordingly)
-- proceed accordingly for `cin`.
+- proceed accordingly for `cin` : replace by `fakein`
+- and the same for `cerr`: replace by `fakeerr`
 - in **misc.h** replace
 
 ```cpp
@@ -71,7 +83,9 @@ with
 
 and include **../../fixes/fixes.h**
 
-- Now we need to get rid of the big NNUE downloaded by default by Stockfish
+#### Adapting NNUE
+
+In file **CmakeLists.txt** replace the names of big and small NNUE by the ones you can find in file **cpp/stockfish/src/evaluate.h**
 
 ## License
 

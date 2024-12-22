@@ -29,6 +29,8 @@
 #include "syzygy/tbprobe.h"
 #include "thread.h"
 
+#include "../../fixes/fixes.h"
+
 namespace Stockfish {
 
 
@@ -159,7 +161,7 @@ void TranspositionTable::resize(size_t mbSize, ThreadPool& threads) {
 
     if (!table)
     {
-        std::cerr << "Failed to allocate " << mbSize << "MB for transposition table." << std::endl;
+        fakeerr << "Failed to allocate " << mbSize << "MB for transposition table." << fakeendl;
         exit(EXIT_FAILURE);
     }
 

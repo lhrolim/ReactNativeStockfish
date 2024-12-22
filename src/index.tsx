@@ -1,5 +1,6 @@
 import ReactNativeStockfish, {
   _subscribeToStockfishOutput,
+  _subscribeToStockfishError,
 } from './NativeReactNativeStockfish';
 
 /**
@@ -18,6 +19,17 @@ export function subscribeToStockfishOutput(
   callback: (output: string) => void
 ): Function {
   return _subscribeToStockfishOutput(callback);
+}
+
+/**
+ * Registers a callback for processing stockfish error
+ * @param callback {function} a callback that takes a string as argument for the error to be processed
+ * @returns {function} a function that unsubscribes the callback
+ */
+export function subscribeToStockfishError(
+  callback: (error: string) => void
+): Function {
+  return _subscribeToStockfishError(callback);
 }
 
 /**

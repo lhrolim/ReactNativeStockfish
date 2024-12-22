@@ -23,6 +23,8 @@
 #include <iostream>
 #include <vector>
 
+#include "../../fixes/fixes.h"
+
 namespace {
 
 // clang-format off
@@ -133,7 +135,7 @@ std::vector<std::string> setup_bench(const std::string& currentFen, std::istream
 
         if (!file.is_open())
         {
-            std::cerr << "Unable to open file " << fenFile << std::endl;
+            fakeerr << "Unable to open file " << fenFile << fakeendl;
             exit(EXIT_FAILURE);
         }
 
