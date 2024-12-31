@@ -1,9 +1,6 @@
 # @loloof64/react-native-stockfish
 
-Use stockfish chess engine in your React Native application
-
-Be careful : though IOS code has been implemented, it has not been tested.
-You may want to adjust the code to make it pass. (I'm open to pull request)
+Use stockfish chess engine in your React Native application.
 
 ## Installation
 
@@ -97,3 +94,8 @@ MIT
 ---
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+
+
+## Credits
+
+Using sources of [Stockfish 17](https://stockfishchess.org/).

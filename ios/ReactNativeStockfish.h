@@ -7,6 +7,5 @@
 
 // also add events manager
 @interface ReactNativeStockfish : RCTEventEmitter <NativeReactNativeStockfishSpec>
-
 @end
 

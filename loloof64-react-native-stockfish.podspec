@@ -39,11 +39,31 @@ Pod::Spec.new do |s|
     end
   end
 
-  s.prepare_command = <<-SCRIPT
-    NNUE_NAME_BIG  = "nn-1111cefa1111.nnue"
-    NNUE_NAME_SMALL = "nn-37f18f62d772.nnue"
-    curl -o ${PODS_ROOT}/${NNUE_NAME_BIG} https://tests.stockfishchess.org/api/nn/${NNUE_NAME_BIG}
-    curl -o ${PODS_ROOT}/${NNUE_NAME_SMALL} https://tests.stockfishchess.org/api/nn/${NNUE_NAME_SMALL}
-  SCRIPT
+  # Added by loloof64
+
+  #-- add the path to the downloaded nnue files
+  s.xcconfig = {
+    'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/loloof64-react-native-stockfish/"'
+  }
+  
+  #-- download nnue files
+  s.script_phases = [
+    {
+      :name => 'Download Binary',
+      :execution_position => :before_compile,
+      :script => <<-SCRIPT
+        # setup variables
+        NNUE_NAME_BIG="nn-1111cefa1111.nnue"
+        NNUE_NAME_SMALL="nn-37f18f62d772.nnue"
+        DOWNLOAD_BASE_URL="https://tests.stockfishchess.org/api/nn"
+        STOCKFISH_SOURCES_DIR="${PODS_ROOT}/loloof64-react-native-stockfish/"
+
+        # download
+        mkdir -p $STOCKFISH_SOURCES_DIR
+        curl -L -o "$STOCKFISH_SOURCES_DIR/$NNUE_NAME_BIG" "$DOWNLOAD_BASE_URL/$NNUE_NAME_BIG"
+        curl -L -o "$STOCKFISH_SOURCES_DIR/$NNUE_NAME_SMALL" "$DOWNLOAD_BASE_URL/$NNUE_NAME_SMALL"
+      SCRIPT
+    }
+  ]
   
 end

@@ -83,3 +83,9 @@ android/generated
 
 # Generated NNUE file
 *.nnue
+
+example/build_output.txt
+*.local
+Gemfile.lock
+Podfile.lock
+*.xcworkspace/
