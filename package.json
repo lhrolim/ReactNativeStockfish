@@ -1,6 +1,6 @@
 {
   "name": "@loloof64/react-native-stockfish",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Use stockfish chess engine in your React Native application",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",

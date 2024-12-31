@@ -1,3 +1,7 @@
+# 0.2.0
+
+Important fix for IOS : could not use Stockfish code.
+
 # 0.1.0
 
 First version of the plugin.

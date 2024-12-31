@@ -3,53 +3,17 @@
 #include <dlfcn.h>
 #import "ReactNativeStockfish.h"
 
-typedef const char *(*StdoutReadFunc)();
-typedef const char *(*StderrReadFunc)();
-typedef void (*MainFunc)();
-typedef void (*StdinWriteFunc)(const char *);
-
 @implementation ReactNativeStockfish {
     void *handle;
     dispatch_queue_t mainQueue;
     BOOL isStockfishInitialized;
     BOOL isStockfishRunning;
 
-    StdoutReadFunc stdoutRead;
-    StderrReadFunc stderrRead;
-    MainFunc main;
-    StdinWriteFunc stdinWrite;
-
     NSTimer *stdoutTimer;
     NSTimer *stderrTimer;
 }
 
 RCT_EXPORT_MODULE();
-
-- (void)initializeStockfish {
-    handle = dlopen("loloof64-react-native-stockfish.dylib", RTLD_NOW | RTLD_GLOBAL);
-    if (!handle) {
-        RCTLogError(@"Failed to load library: %s", dlerror());
-        return;
-    }
-
-    stdoutRead = (StdoutReadFunc)dlsym(handle, "stdoutRead");
-    stderrRead = (StderrReadFunc)dlsym(handle, "stderrRead");
-    main = (MainFunc)dlsym(handle, "main");
-    stdinWrite = (StdinWriteFunc)dlsym(handle, "stdinWrite");
-
-    if (!stdoutRead) {
-        RCTLogError(@"Failed to load stdoutRead function: %s", dlerror());
-    }
-    if (!stderrRead) {
-        RCTLogError(@"Failed to load stderrRead function: %s", dlerror());
-    }
-    if (!main) {
-        RCTLogError(@"Failed to load main function: %s", dlerror());
-    }
-    if (!stdinWrite) {
-        RCTLogError(@"Failed to load stdinWrite function: %s", dlerror());
-    }
-}
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -66,15 +30,9 @@ RCT_EXPORT_MODULE();
 
 // Starts Stockfish main loop
 RCT_EXPORT_METHOD(stockfishLoop) {
-    // Intialize Stockfish, if necessary
-    if (!isStockfishInitialized) {
-        [self initializeStockfish];
-        isStockfishInitialized = YES;
-    }
-
     isStockfishRunning = YES;
     dispatch_async(mainQueue, ^{
-        main();
+       loloof64_reactnativestockfish::stockfish_main();
     });
 
     // Start timers for stdout and stderr reading
@@ -84,11 +42,6 @@ RCT_EXPORT_METHOD(stockfishLoop) {
 
 // Send a command to Stockfish
 RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
-    if (!stdinWrite) {
-        RCTLogError(@"stdinWrite function is not loaded. Cannot send command.");
-        return;
-    }
-
     if (!isStockfishRunning) {
         RCTLogError(@"Stockfish is not running. Cannot send command.");
         return;
@@ -96,7 +49,7 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
 
 
     const char *nativeCommand = [command UTF8String];
-    stdinWrite(nativeCommand);
+    loloof64_reactnativestockfish::stockfish_stdin_write(nativeCommand);
 }
 
 - (void)startTimerForStdoutReading {
@@ -116,14 +69,14 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
 }
 
 - (void)readStdout {
-    const char *output = stdoutRead();
+    const char *output = loloof64_reactnativestockfish::stockfish_stdout_read();
     if (output) {
         [self sendEventWithName:@"stockfish-output" body:@(output)];
     }
 }
 
 - (void)readStderr {
-    const char *error = stderrRead();
+    const char *error = loloof64_reactnativestockfish::stockfish_stderr_read();
     if (error) {
         [self sendEventWithName:@"stockfish-error" body:@(error)];
     }
