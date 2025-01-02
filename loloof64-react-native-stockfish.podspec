@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "https://github.com/loloof64/loloof64-react-native-stockfish.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/loloof64/ReactNativeStockfish.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{hpp,cpp,c,h}"
 
@@ -49,7 +49,7 @@ Pod::Spec.new do |s|
   #-- download nnue files
   s.script_phases = [
     {
-      :name => 'Download Binary',
+      :name => 'Download Stockfish NNUE files',
       :execution_position => :before_compile,
       :script => <<-SCRIPT
         # setup variables
@@ -65,5 +65,4 @@ Pod::Spec.new do |s|
       SCRIPT
     }
   ]
-  
 end

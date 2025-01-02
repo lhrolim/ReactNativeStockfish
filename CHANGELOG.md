@@ -1,3 +1,7 @@
+# 0.3.0
+
+Use latest template from [Create React Native Library](https://callstack.github.io/react-native-builder-bob/create)
+
 # 0.2.0
 
 Important fix for IOS : could not use Stockfish code.
