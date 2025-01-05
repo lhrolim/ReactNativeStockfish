@@ -12,34 +12,24 @@ npm install @loloof64/react-native-stockfish
 
 ```js
 import {
-  stockfishLoop,
-  sendCommandToStockfish,
-  subscribeToStockfishOutput,
-  subscribeToStockfishError,
-  stopStockfish,
+  useStockfish
 } from '@loloof64/react-native-stockfish';
 
 // ...
 
-stockfishLoop();
+const [stockfishOutput, setStockfishOutput] = useState('');
+  const {startStockfish, stopStockfish, sendCommandToStockfish} = useStockfish({
+    onOutput: useCallback((output: string) => {
+      setStockfishOutput((prev) => prev + output);
+    }, []),
+    onError: useCallback((error: string) => {
+      setStockfishOutput((prev) => `${prev}\n###Err\n${error}\n###`);
+    }, [])
+  });
 
 // ...
 
-useEffect(() => {
-  const unsubscribe = subscribeToStockfishOutput((output) => {
-    console.log('Stockfish Output:', output);
-  });
-
-  return () => unsubscribe();
-}, []);
-
-useEffect(() => {
-  const unsubscribe = subscribeToStockfishError((error) => {
-    console.log('Stockfish Error:', error);
-  });
-
-  return () => unsubscribe();
-}, []);
+startStockfish();
 
 // ...
 
@@ -70,7 +60,11 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 ### Changing Stockfish source files
 
-If you need to upgrade Stockfish source files, create a folder **stockfish** inside **cpp** folder, copy the **src** folder from the stockfish sources into the new **stockfish folder**. Also you need to make some more adaptive works :
+If you need to upgrade Stockfish source files, create a folder **stockfish** inside **cpp** folder, copy the **src** folder from the stockfish sources into the new **stockfish folder**.
+
+In **stockfish/src/main.cpp** replace the name of function `main` with `stockfish_core`.
+
+Also you need to make some more adaptive works :
 
 #### Adapting streams
 

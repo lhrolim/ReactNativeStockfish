@@ -83,6 +83,6 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   }
 
   companion object {
-    const val NAME = "ReactNativeStockfish"
+    const val NAME = "Loloof64ReactNativeStockfish"
   }
 }

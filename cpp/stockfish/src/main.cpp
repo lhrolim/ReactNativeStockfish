@@ -29,8 +29,7 @@ using namespace Stockfish;
 
 #include "../fixes/fixes.h"
 
-int main(int argc, char* argv[]) {
-
+int stockfish_core(int argc, char* argv[]) {
     fakeout << engine_info() << fakeendl;
 
     Bitboards::init();

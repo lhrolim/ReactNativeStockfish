@@ -1,12 +1,12 @@
 #include "loloof64-react-native-stockfish.h"
-#include "fixes/fixes.h"
+#include "stockfish/fixes/fixes.h"
 
 #include <iostream>
 #include <string>
 
 #define BUFFER_SIZE 1024
 
-int main(int, char **);
+int stockfish_core(int, char **);
 
 std::string data;
 std::string err_data;
@@ -19,7 +19,7 @@ namespace loloof64_reactnativestockfish {
 	int stockfish_main() {
 		int argc = 1;
 		char *argv[] = {(char *)""};
-		int exitCode = main(argc, argv);
+		int exitCode = stockfish_core(argc, argv);
 
 		fakeout << QUITOK << "\n";
 

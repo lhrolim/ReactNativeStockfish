@@ -10,7 +10,7 @@
 
 template <typename T>
 inline std::string stringify(const T& input) {
-    std::ostringstream output;  // from   www  .ja va  2s  . com
+    std::ostringstream output;
     output << input;
     return output.str();
 }

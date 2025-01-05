@@ -6,50 +6,42 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import { useEffect, useState } from 'react';
-import {
-  stockfishLoop,
-  subscribeToStockfishOutput,
-  subscribeToStockfishError,
-  sendCommandToStockfish,
-  stopStockfish,
-} from '@loloof64/react-native-stockfish';
-
-function useStockfishOutput() {
-  const [stockfishOutput, setStockfishOutput] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = subscribeToStockfishOutput((output) => {
-      setStockfishOutput((prev) => prev + output);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = subscribeToStockfishError((error) => {
-      setStockfishOutput((prev) => `${prev}\n@@@\n${error}\n`);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  return stockfishOutput;
-}
+import { useEffect, useState, useCallback } from 'react';
+import { useStockfish } from '@loloof64/react-native-stockfish';
 
 export default function App() {
   const [command, setCommand] = useState('');
+  const [stockfishOutput, setStockfishOutput] = useState('');
+
+  const { startStockfish, stopStockfish, sendCommandToStockfish } =
+    useStockfish({
+      onOutput: useCallback((output: string) => {
+        setStockfishOutput((prev) => {
+          return prev + output;
+        });
+      }, []),
+      onError: useCallback((error: string) => {
+        setStockfishOutput((prev) => {
+          return `${prev}\n###Err\n${error}\n###`;
+        });
+      }, []),
+    });
 
   useEffect(() => {
-    stockfishLoop();
-    sendCommandToStockfish('uci');
+    /////TEMPORARY
+    console.log('start effect');
+    /////
+    const sendUciCommand = () => sendCommandToStockfish('uci');
+    startStockfish();
+    setTimeout(sendUciCommand, 800);
 
     return () => {
       stopStockfish();
+      /////TEMPORARY
+      console.log('stop effect');
+      /////
     };
-  }, []);
-
-  const stockfishOutput = useStockfishOutput();
+  }, [startStockfish, stopStockfish, sendCommandToStockfish]);
 
   return (
     <View style={styles.container}>
@@ -64,7 +56,8 @@ export default function App() {
         <Button
           title="Send"
           onPress={() => {
-            sendCommandToStockfish(`${command}\n`);
+            setStockfishOutput('');
+            sendCommandToStockfish(`${command.toLowerCase()}\n`);
             setCommand('');
           }}
         />
@@ -82,6 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    marginTop: 100,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -91,5 +85,7 @@ const styles = StyleSheet.create({
   },
   inputControl: {
     flex: 1,
+    minWidth: 200,
+    padding: 5,
   },
 });

@@ -5,9 +5,17 @@ import {
   NativeEventEmitter,
 } from 'react-native';
 
-const { ReactNativeStockfish } = NativeModules;
+console.log('NativeModules is defined as :', NativeModules);
 
-const eventEmitter = new NativeEventEmitter(ReactNativeStockfish);
+const { Loloof64ReactNativeStockfish } = NativeModules;
+
+if (!Loloof64ReactNativeStockfish) {
+  throw new Error(
+    'Loloof64ReactNativeStockfish native module is not linked. Ensure that you have run `pod install` and rebuilt the app.'
+  );
+}
+
+const eventEmitter = new NativeEventEmitter(Loloof64ReactNativeStockfish);
 
 export const _subscribeToStockfishOutput = (
   callback: (output: string) => void
@@ -24,9 +32,11 @@ export const _subscribeToStockfishError = (
 };
 
 export interface Spec extends TurboModule {
-  stockfishLoop(): void;
+  startStockfish(): void;
   sendCommandToStockfish(command: string): void;
   stopStockfish(): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('ReactNativeStockfish');
+export default TurboModuleRegistry.getEnforcing<Spec>(
+  'Loloof64ReactNativeStockfish'
+);
