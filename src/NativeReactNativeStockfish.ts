@@ -32,7 +32,7 @@ export const _subscribeToStockfishError = (
 };
 
 export interface Spec extends TurboModule {
-  startStockfish(): void;
+  stockfishLoop(): void;
   sendCommandToStockfish(command: string): void;
   stopStockfish(): void;
 }

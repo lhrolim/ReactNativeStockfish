@@ -13,8 +13,8 @@ export default function App() {
   const [command, setCommand] = useState('');
   const [stockfishOutput, setStockfishOutput] = useState('');
 
-  const { startStockfish, stopStockfish, sendCommandToStockfish } =
-    useStockfish({
+  const { stockfishLoop, stopStockfish, sendCommandToStockfish } = useStockfish(
+    {
       onOutput: useCallback((output: string) => {
         setStockfishOutput((prev) => {
           return prev + output;
@@ -25,14 +25,15 @@ export default function App() {
           return `${prev}\n###Err\n${error}\n###`;
         });
       }, []),
-    });
+    }
+  );
 
   useEffect(() => {
     /////TEMPORARY
     console.log('start effect');
     /////
     const sendUciCommand = () => sendCommandToStockfish('uci');
-    startStockfish();
+    stockfishLoop();
     setTimeout(sendUciCommand, 800);
 
     return () => {
@@ -41,7 +42,7 @@ export default function App() {
       console.log('stop effect');
       /////
     };
-  }, [startStockfish, stopStockfish, sendCommandToStockfish]);
+  }, [stockfishLoop, stopStockfish, sendCommandToStockfish]);
 
   return (
     <View style={styles.container}>

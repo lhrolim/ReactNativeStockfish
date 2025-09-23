@@ -25,7 +25,7 @@ RCT_EXPORT_MODULE(Loloof64ReactNativeStockfish);
 }
 
 // Start Stockfish in a background thread
-RCT_EXPORT_METHOD(startStockfish) {
+RCT_EXPORT_METHOD(stockfishLoop) {
     if (stockfishThread && stockfishThread.isExecuting) {
         RCTLogInfo(@"Stockfish is already running. Ignoring start request.");
         return;

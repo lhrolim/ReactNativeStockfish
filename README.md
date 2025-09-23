@@ -18,7 +18,7 @@ import {
 // ...
 
 const [stockfishOutput, setStockfishOutput] = useState('');
-  const {startStockfish, stopStockfish, sendCommandToStockfish} = useStockfish({
+  const {stockfishLoop, stopStockfish, sendCommandToStockfish} = useStockfish({
     onOutput: useCallback((output: string) => {
       setStockfishOutput((prev) => prev + output);
     }, []),
@@ -29,7 +29,7 @@ const [stockfishOutput, setStockfishOutput] = useState('');
 
 // ...
 
-startStockfish();
+stockfishLoop();
 
 // ...
 
@@ -44,15 +44,15 @@ stopStockfish();
 
 Get started with the project:
 
-  $ yarn
+$ yarn
 
 Run the example app on iOS:
 
-  $ yarn example ios
+$ yarn example ios
 
 Run the example app on Android:
 
-  $ yarn example android
+$ yarn example android
 
 ## Contributing
 
@@ -102,7 +102,6 @@ MIT
 ---
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
-
 
 ## Credits
 

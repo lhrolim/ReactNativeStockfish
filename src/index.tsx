@@ -16,7 +16,7 @@ type UseStockfishOptions = {
  * @param onError - an optional function for reading Stockfish error - callback of (string) => void
  * @returns an array with three functions :
  * --------
- * startStockfish
+ * stockfishLoop
  * Starts Stockfish
  * --------
  * stopStockfish
@@ -30,10 +30,10 @@ type UseStockfishOptions = {
 export function useStockfish({ onOutput, onError }: UseStockfishOptions) {
   const isStockfishRunning = useRef(false);
 
-  const startStockfish = useCallback(() => {
+  const stockfishLoop = useCallback(() => {
     if (!isStockfishRunning.current) {
       isStockfishRunning.current = true;
-      Loloof64ReactNativeStockfish.startStockfish();
+      Loloof64ReactNativeStockfish.stockfishLoop();
     }
   }, []);
 
@@ -77,5 +77,5 @@ export function useStockfish({ onOutput, onError }: UseStockfishOptions) {
     };
   }, [onOutput, onError, stopStockfish]);
 
-  return { startStockfish, stopStockfish, sendCommandToStockfish };
+  return { stockfishLoop, stopStockfish, sendCommandToStockfish };
 }
