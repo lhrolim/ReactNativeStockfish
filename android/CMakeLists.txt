@@ -19,8 +19,8 @@ file(GLOB_RECURSE stockfishCppPaths "../cpp/stockfish/src/*.cpp")
 file(GLOB_RECURSE stockfishFixesPaths "../cpp/stockfish/fixes/*.cpp")
 
 
-add_library(loloof64-react-native-stockfish            SHARED
-            ../cpp/loloof64-react-native-stockfish.cpp
+add_library(react-native-stockfish            SHARED
+            ../cpp/react-native-stockfish.cpp
             cpp-adapter.cpp
             ${stockfishCppPaths}
             ${stockfishFixesPaths}

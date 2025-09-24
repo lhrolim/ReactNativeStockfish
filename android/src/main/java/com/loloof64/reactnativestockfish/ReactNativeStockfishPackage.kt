@@ -24,7 +24,6 @@ class ReactNativeStockfishPackage : BaseReactPackage() {
         ReactNativeStockfishModule.NAME,
         false,  // canOverrideExistingModule
         false,  // needsEagerInit
-        true,  // hasConstants
         false,  // isCxxModule
         true // isTurboModule
       )

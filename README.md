@@ -93,7 +93,7 @@ and include **../../fixes/fixes.h**
 
 #### Adapting NNUE
 
-In file **CMakeLists.txt** replace the names of big and small NNUE by the ones you can find in file **cpp/stockfish/src/evaluate.h**. Also replace those values in the file **loloof64-react-native-stockfish.podspec**, as well as in the file **android/CMakeLists.txt**.
+In file **CMakeLists.txt** replace the names of big and small NNUE by the ones you can find in file **cpp/stockfish/src/evaluate.h**. Also replace those values in the file **ReactNativeStockfish.podspec**, as well as in the file **android/CMakeLists.txt**.
 
 ## License
 

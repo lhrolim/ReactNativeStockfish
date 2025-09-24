@@ -25,7 +25,7 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   }
 
   init {
-    System.loadLibrary("loloof64-react-native-stockfish")
+    System.loadLibrary("react-native-stockfish")
   }
 
   override fun stockfishLoop() {
@@ -83,6 +83,6 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   }
 
   companion object {
-    const val NAME = "Loloof64ReactNativeStockfish"
+    const val NAME = "ReactNativeStockfish"
   }
 }

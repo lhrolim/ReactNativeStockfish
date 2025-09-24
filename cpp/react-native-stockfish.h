@@ -1,5 +1,5 @@
-#ifndef LOLOOF64_REACTNATIVESTOCKFISH_H
-#define LOLOOF64_REACTNATIVESTOCKFISH_H
+#ifndef REACTNATIVESTOCKFISH_H
+#define REACTNATIVESTOCKFISH_H
 
 #ifdef _WIN32
 #include <fcntl.h>
@@ -13,18 +13,19 @@
 #include <unistd.h>
 #endif
 
-namespace loloof64_reactnativestockfish {
+namespace reactnativestockfish
+{
   // Runs the main stockfish loop
   int stockfish_main();
 
   // Send command to stockfish
-  ssize_t stockfish_stdin_write(const char * data);
+  ssize_t stockfish_stdin_write(const char *data);
 
   // Reads stockfish output
-  char * stockfish_stdout_read();
+  char *stockfish_stdout_read();
 
   // Reads stockfish error
-  char * stockfish_stderr_read();
+  char *stockfish_stderr_read();
 }
 
-#endif /* LOLOOF64_REACTNATIVESTOCKFISH_H */
+#endif /* REACTNATIVESTOCKFISH_H */

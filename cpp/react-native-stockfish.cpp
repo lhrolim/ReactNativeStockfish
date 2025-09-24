@@ -1,4 +1,4 @@
-#include "loloof64-react-native-stockfish.h"
+#include "react-native-stockfish.h"
 #include "stockfish/fixes/fixes.h"
 
 #include <iostream>
@@ -13,10 +13,12 @@ std::string err_data;
 char buffer[BUFFER_SIZE + 1];
 char err_buffer[BUFFER_SIZE + 1];
 
-namespace loloof64_reactnativestockfish {
+namespace reactnativestockfish
+{
 	const char *QUITOK = "quit\n";
 
-	int stockfish_main() {
+	int stockfish_main()
+	{
 		int argc = 1;
 		char *argv[] = {(char *)""};
 		int exitCode = stockfish_core(argc, argv);
@@ -24,9 +26,9 @@ namespace loloof64_reactnativestockfish {
 		fakeout << QUITOK << "\n";
 
 #if _WIN32
-    	Sleep(100);
+		Sleep(100);
 #else
-    	usleep(100);
+		usleep(100);
 #endif
 
 		fakeout.close();
@@ -35,17 +37,21 @@ namespace loloof64_reactnativestockfish {
 		return exitCode;
 	}
 
-	ssize_t stockfish_stdin_write(const char * data) {
+	ssize_t stockfish_stdin_write(const char *data)
+	{
 		std::string val(data);
 		fakein << val << fakeendl;
 		return val.length();
 	}
 
-	char * stockfish_stdout_read() {
-		if (getline(fakeout, data)) {
+	char *stockfish_stdout_read()
+	{
+		if (getline(fakeout, data))
+		{
 			size_t len = data.length();
 			size_t i;
-			for (i = 0; i < len && i < BUFFER_SIZE; i++) {
+			for (i = 0; i < len && i < BUFFER_SIZE; i++)
+			{
 				buffer[i] = data[i];
 			}
 			buffer[i] = 0;
@@ -54,11 +60,14 @@ namespace loloof64_reactnativestockfish {
 		return nullptr;
 	}
 
-	char * stockfish_stderr_read() {
-		if (getline(fakeerr, err_data)) {
+	char *stockfish_stderr_read()
+	{
+		if (getline(fakeerr, err_data))
+		{
 			size_t len = err_data.length();
 			size_t i;
-			for (i = 0; i < len && i < BUFFER_SIZE; i++) {
+			for (i = 0; i < len && i < BUFFER_SIZE; i++)
+			{
 				err_buffer[i] = err_data[i];
 			}
 			err_buffer[i] = 0;

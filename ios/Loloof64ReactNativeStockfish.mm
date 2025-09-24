@@ -1,9 +1,9 @@
 #import <React/RCTLog.h>
 #import <Foundation/Foundation.h>
 #include <dlfcn.h>
-#import "Loloof64ReactNativeStockfish.h"
+#import "ReactNativeStockfish.h"
 
-@implementation Loloof64ReactNativeStockfish {
+@implementation ReactNativeStockfish {
     NSThread *stockfishThread;
     BOOL shouldStopStockfish;
 
@@ -11,10 +11,10 @@
     dispatch_source_t stderrTimer;
 }
 
-RCT_EXPORT_MODULE(Loloof64ReactNativeStockfish);
+RCT_EXPORT_MODULE(ReactNativeStockfish);
 
 - (instancetype)init {
-    NSLog(@"Loloof64ReactNativeStockfish module is loading");
+    NSLog(@"ReactNativeStockfish module is loading");
     self = [super init];
     return self;
 }
@@ -157,7 +157,7 @@ RCT_EXPORT_METHOD(stopStockfish) {
 }
 
 - (void)dealloc {
-    NSLog(@"Loloof64ReactNativeStockfish module is being removed");
+    NSLog(@"ReactNativeStockfish module is being removed");
     [self stopStockfish];
 }
 

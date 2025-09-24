@@ -1,4 +1,4 @@
-import Loloof64ReactNativeStockfish, {
+import ReactNativeStockfish, {
   _subscribeToStockfishOutput,
   _subscribeToStockfishError,
 } from './NativeReactNativeStockfish';
@@ -33,20 +33,20 @@ export function useStockfish({ onOutput, onError }: UseStockfishOptions) {
   const stockfishLoop = useCallback(() => {
     if (!isStockfishRunning.current) {
       isStockfishRunning.current = true;
-      Loloof64ReactNativeStockfish.stockfishLoop();
+      ReactNativeStockfish.stockfishLoop();
     }
   }, []);
 
   const stopStockfish = useCallback(() => {
     if (isStockfishRunning.current) {
-      Loloof64ReactNativeStockfish.stopStockfish();
+      ReactNativeStockfish.stopStockfish();
       isStockfishRunning.current = false;
     }
   }, []);
 
   const sendCommandToStockfish = useCallback((command: string) => {
     if (isStockfishRunning.current) {
-      Loloof64ReactNativeStockfish.sendCommandToStockfish(command);
+      ReactNativeStockfish.sendCommandToStockfish(command);
     } else {
       console.warn('Stockfish is not running. Cannot send command.');
     }
