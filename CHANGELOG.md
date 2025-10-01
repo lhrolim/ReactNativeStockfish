@@ -1,3 +1,7 @@
+# 0.3.2
+
+Fix library for IOS. (credits to thgank)
+
 # 0.3.1
 
 Fix library and example, at least for Android.

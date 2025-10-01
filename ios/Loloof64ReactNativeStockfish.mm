@@ -43,7 +43,7 @@ RCT_EXPORT_METHOD(stockfishLoop) {
     @autoreleasepool {
         RCTLogInfo(@"Stockfish thread started.");
 
-        loloof64_reactnativestockfish::stockfish_main();
+        reactnativestockfish::stockfish_main();
 
         RCTLogInfo(@"Stockfish thread ended.");
     }
@@ -57,7 +57,7 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
     }
 
     const char *nativeCommand = [command UTF8String];
-    loloof64_reactnativestockfish::stockfish_stdin_write(nativeCommand);
+    reactnativestockfish::stockfish_stdin_write(nativeCommand);
 }
 
 - (void)startTimerForStdoutReading {
@@ -79,7 +79,7 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
                               0);                                  // Tolerance
 
     dispatch_source_set_event_handler(stdoutTimer, ^{
-        const char *output = loloof64_reactnativestockfish::stockfish_stdout_read();
+        const char *output = reactnativestockfish::stockfish_stdout_read();
         if (output) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self sendEventWithName:@"stockfish-output" body:@(output)];
@@ -111,7 +111,7 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
                               0);                                  // Tolerance
 
     dispatch_source_set_event_handler(stderrTimer, ^{
-        const char *error = loloof64_reactnativestockfish::stockfish_stderr_read();
+        const char *error = reactnativestockfish::stockfish_stderr_read();
         if (error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self sendEventWithName:@"stockfish-error" body:@(error)];
@@ -145,7 +145,7 @@ RCT_EXPORT_METHOD(stopStockfish) {
     if (stockfishThread && stockfishThread.isExecuting) {
         shouldStopStockfish = YES;
 
-        loloof64_reactnativestockfish::stockfish_stdin_write("quit\n");
+        reactnativestockfish::stockfish_stdin_write("quit\n");
 
         [stockfishThread cancel];
         stockfishThread = nil;
