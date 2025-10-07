@@ -55,7 +55,7 @@ Engine::Engine(std::string path) :
     networks(
       numaContext,
       NN::Networks(
-        NN::NetworkBig({EvalFileDefaultNameSmall, "None", ""}, NN::EmbeddedNNUEType::SMALL),
+        NN::NetworkBig({EvalFileDefaultNameBig, "None", ""}, NN::EmbeddedNNUEType::BIG),
         NN::NetworkSmall({EvalFileDefaultNameSmall, "None", ""}, NN::EmbeddedNNUEType::SMALL))) {
     pos.set(StartFEN, false, &states->back());
     capSq = SQ_NONE;
@@ -226,15 +226,13 @@ void Engine::set_ponderhit(bool b) { threads.main_manager()->ponder = b; }
 // network related
 
 void Engine::verify_networks() const {
-    // OPTIMIZATION: Skip verifying big network for mobile performance
-    // networks->big.verify(options["EvalFile"]);
+    networks->big.verify(options["EvalFile"]);
     networks->small.verify(options["EvalFileSmall"]);
 }
 
 void Engine::load_networks() {
     networks.modify_and_replicate([this](NN::Networks& networks_) {
-        // OPTIMIZATION: Skip loading big network for mobile performance
-        // networks_.big.load(binaryDirectory, options["EvalFile"]);
+        networks_.big.load(binaryDirectory, options["EvalFile"]);
         networks_.small.load(binaryDirectory, options["EvalFileSmall"]);
     });
     threads.clear();
