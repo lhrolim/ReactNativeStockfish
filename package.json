@@ -2,13 +2,13 @@
   "name": "@loloof64/react-native-stockfish",
   "version": "0.3.2",
   "description": "Use stockfish chess engine in your React Native application.",
-  "main": "./lib/module/index.js",
-  "types": "./lib/typescript/src/index.d.ts",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
   "exports": {
     ".": {
       "source": "./src/index.tsx",
-      "types": "./lib/typescript/src/index.d.ts",
-      "default": "./lib/module/index.js"
+      "types": "./src/index.tsx",
+      "default": "./src/index.tsx"
     },
     "./package.json": "./package.json"
   },
@@ -168,5 +168,8 @@
     "languages": "kotlin-objc",
     "type": "turbo-module",
     "version": "0.54.3"
+  },
+  "dependencies": {
+    "@loloof64/react-native-stockfish": "github:lhrolim/ReactNativeStockfish"
   }
 }
