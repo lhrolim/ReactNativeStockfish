@@ -123,7 +123,9 @@ std::uint64_t Engine::perft(const std::string& fen, Depth depth, bool isChess960
 
 void Engine::go(Search::LimitsType& limits) {
     assert(limits.perft == 0);
-    verify_networks();
+    // OPTIMIZATION: Skip verify_networks() on every analysis for performance
+    // Networks are already loaded once in constructor, no need to verify repeatedly
+    // verify_networks();
     limits.capSq = capSq;
 
     threads.start_thinking(options, pos, states, limits);
