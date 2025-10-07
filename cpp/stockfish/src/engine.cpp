@@ -55,8 +55,8 @@ Engine::Engine(std::string path) :
     networks(
       numaContext,
       NN::Networks(
-        NN::NetworkBig({EvalFileDefaultNameBig, "None", ""}, NN::EmbeddedNNUEType::BIG),
-        NN::NetworkSmall({EvalFileDefaultNameSmall, "None", ""}, NN::EmbeddedNNUEType::SMALL))) {
+        NN::NetworkBig({EvalFileDefaultNameSmall, "None", ""}, NN::EmbeddedNNUEType::SMALL),
+        NN::NetworkSmall({EvalFileDefaultNameBig, "None", ""}, NN::EmbeddedNNUEType::BIG))) {
     pos.set(StartFEN, false, &states->back());
     capSq = SQ_NONE;
 
