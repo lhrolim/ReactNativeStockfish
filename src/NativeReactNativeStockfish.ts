@@ -1,6 +1,4 @@
-import type { TurboModule } from 'react-native';
 import {
-  TurboModuleRegistry,
   NativeModules,
   NativeEventEmitter,
 } from 'react-native';
@@ -29,10 +27,10 @@ export const _subscribeToStockfishError = (
   return () => subscription.remove();
 };
 
-export interface Spec extends TurboModule {
+export interface Spec {
   stockfishLoop(): void;
   sendCommandToStockfish(command: string): void;
   stopStockfish(): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('ReactNativeStockfish');
+export default ReactNativeStockfish as Spec;
