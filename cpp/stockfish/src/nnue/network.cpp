@@ -72,9 +72,10 @@ struct EmbeddedNNUE {
 using namespace Stockfish::Eval::NNUE;
 
 EmbeddedNNUE get_embedded(EmbeddedNNUEType type) {
-    // OPTIMIZATION: Always return small network data for mobile performance
-    // This prevents the 133MiB big network from ever being loaded
-    return EmbeddedNNUE(gEmbeddedNNUESmallData, gEmbeddedNNUESmallEnd, gEmbeddedNNUESmallSize);
+    if (type == EmbeddedNNUEType::BIG)
+        return EmbeddedNNUE(gEmbeddedNNUEBigData, gEmbeddedNNUEBigEnd, gEmbeddedNNUEBigSize);
+    else
+        return EmbeddedNNUE(gEmbeddedNNUESmallData, gEmbeddedNNUESmallEnd, gEmbeddedNNUESmallSize);
 }
 
 }
@@ -154,12 +155,6 @@ void Network<Arch, Transformer>::load(const std::string& rootDirectory, std::str
 
     if (evalfilePath.empty())
         evalfilePath = evalFile.defaultName;
-
-    // OPTIMIZATION: Force small network for mobile performance
-    // Replace big network requests with small network
-    if (evalfilePath.find("nn-1111cefa1111.nnue") != std::string::npos) {
-        evalfilePath = "nn-37f18f62d772.nnue";
-    }
 
     for (const auto& directory : dirs)
     {
@@ -243,12 +238,6 @@ template<typename Arch, typename Transformer>
 void Network<Arch, Transformer>::verify(std::string evalfilePath) const {
     if (evalfilePath.empty())
         evalfilePath = evalFile.defaultName;
-
-    // OPTIMIZATION: Force small network display for mobile performance
-    // Always show small network name in logs to avoid confusion
-    if (evalfilePath.find("nn-1111cefa1111.nnue") != std::string::npos) {
-        evalfilePath = "nn-37f18f62d772.nnue";
-    }
 
     if (evalFile.current != evalfilePath)
     {
