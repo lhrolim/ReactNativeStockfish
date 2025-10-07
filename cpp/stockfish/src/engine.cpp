@@ -226,13 +226,15 @@ void Engine::set_ponderhit(bool b) { threads.main_manager()->ponder = b; }
 // network related
 
 void Engine::verify_networks() const {
-    networks->big.verify(options["EvalFile"]);
+    // OPTIMIZATION: Skip verifying big network for mobile performance
+    // networks->big.verify(options["EvalFile"]);
     networks->small.verify(options["EvalFileSmall"]);
 }
 
 void Engine::load_networks() {
     networks.modify_and_replicate([this](NN::Networks& networks_) {
-        networks_.big.load(binaryDirectory, options["EvalFile"]);
+        // OPTIMIZATION: Skip loading big network for mobile performance
+        // networks_.big.load(binaryDirectory, options["EvalFile"]);
         networks_.small.load(binaryDirectory, options["EvalFileSmall"]);
     });
     threads.clear();
