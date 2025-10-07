@@ -79,3 +79,7 @@ export function useStockfish({ onOutput, onError }: UseStockfishOptions) {
 
   return { stockfishLoop, stopStockfish, sendCommandToStockfish };
 }
+
+// Export for direct usage
+export { _subscribeToStockfishOutput, _subscribeToStockfishError };
+export default ReactNativeStockfish;
