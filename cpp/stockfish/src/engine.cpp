@@ -102,8 +102,8 @@ Engine::Engine(std::string path) :
     options["SyzygyProbeDepth"] << Option(1, 1, 100);
     options["Syzygy50MoveRule"] << Option(true);
     options["SyzygyProbeLimit"] << Option(7, 0, 7);
-    options["EvalFile"] << Option(EvalFileDefaultNameBig, [this](const Option& o) {
-        load_big_network(o);
+    options["EvalFile"] << Option(EvalFileDefaultNameSmall, [this](const Option& o) {
+        load_small_network(o);
         return std::nullopt;
     });
     options["EvalFileSmall"] << Option(EvalFileDefaultNameSmall, [this](const Option& o) {
