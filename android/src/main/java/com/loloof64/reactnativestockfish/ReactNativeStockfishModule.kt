@@ -33,10 +33,11 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun stockfishLoop() {
     val delayTimeMs = 100L
-    mainCoroutineScope.launch {
-      delay(delayTimeMs)
+    // Run main() in a separate thread, not in a coroutine
+    Thread {
+      Thread.sleep(delayTimeMs)
       main()
-    }
+    }.start()
     outputReaderCoroutineScope.launch {
       while (true) {
         val reactIsNotReady = reactApplicationContext.currentActivity == null
