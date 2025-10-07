@@ -55,7 +55,7 @@ Engine::Engine(std::string path) :
     networks(
       numaContext,
       NN::Networks(
-        NN::NetworkBig({EvalFileDefaultNameSmall, "None", ""}, NN::EmbeddedNNUEType::SMALL),
+        NN::NetworkBig({EvalFileDefaultNameBig, "None", ""}, NN::EmbeddedNNUEType::BIG),
         NN::NetworkSmall({EvalFileDefaultNameSmall, "None", ""}, NN::EmbeddedNNUEType::SMALL))) {
     pos.set(StartFEN, false, &states->back());
     capSq = SQ_NONE;
@@ -102,8 +102,8 @@ Engine::Engine(std::string path) :
     options["SyzygyProbeDepth"] << Option(1, 1, 100);
     options["Syzygy50MoveRule"] << Option(true);
     options["SyzygyProbeLimit"] << Option(7, 0, 7);
-    options["EvalFile"] << Option(EvalFileDefaultNameSmall, [this](const Option& o) {
-        load_small_network(o);
+    options["EvalFile"] << Option(EvalFileDefaultNameBig, [this](const Option& o) {
+        load_big_network(o);
         return std::nullopt;
     });
     options["EvalFileSmall"] << Option(EvalFileDefaultNameSmall, [this](const Option& o) {
