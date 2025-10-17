@@ -228,13 +228,17 @@ void Engine::set_ponderhit(bool b) { threads.main_manager()->ponder = b; }
 // network related
 
 void Engine::verify_networks() const {
-    networks->big.verify(options["EvalFile"]);
+    // MOBILE OPTIMIZATION: Skip big network verification (never loaded)
+    // networks->big.verify(options["EvalFile"]);
     networks->small.verify(options["EvalFileSmall"]);
 }
 
 void Engine::load_networks() {
     networks.modify_and_replicate([this](NN::Networks& networks_) {
-        networks_.big.load(binaryDirectory, options["EvalFile"]);
+        // MOBILE OPTIMIZATION: Only load small network (6MB)
+        // Big network (133MB) is never used due to evaluate.cpp forcing small network
+        // Skipping big network load saves ~1-2 seconds on startup
+        // networks_.big.load(binaryDirectory, options["EvalFile"]);
         networks_.small.load(binaryDirectory, options["EvalFileSmall"]);
     });
     threads.clear();
@@ -242,10 +246,12 @@ void Engine::load_networks() {
 }
 
 void Engine::load_big_network(const std::string& file) {
-    networks.modify_and_replicate(
-      [this, &file](NN::Networks& networks_) { networks_.big.load(binaryDirectory, file); });
-    threads.clear();
-    threads.ensure_network_replicated();
+    // MOBILE OPTIMIZATION: Big network loading disabled
+    // Only small network (6MB) is used for mobile performance
+    // networks.modify_and_replicate(
+    //   [this, &file](NN::Networks& networks_) { networks_.big.load(binaryDirectory, file); });
+    // threads.clear();
+    // threads.ensure_network_replicated();
 }
 
 void Engine::load_small_network(const std::string& file) {
