@@ -33,7 +33,9 @@ namespace Eval {
 // for the build process (profile-build and fishtest) to work. Do not change the
 // name of the macro or the location where this macro is defined, as it is used
 // in the Makefile/Fishtest.
-#define EvalFileDefaultNameBig "nn-1111cefa1111.nnue"
+// MOBILE OPTIMIZATION: Both networks load the small NNUE (6MB) to avoid 133MB big network
+// This prevents crashes from unloaded networks while saving 127MB of memory
+#define EvalFileDefaultNameBig "nn-37f18f62d772.nnue"
 #define EvalFileDefaultNameSmall "nn-37f18f62d772.nnue"
 
 namespace NNUE {
