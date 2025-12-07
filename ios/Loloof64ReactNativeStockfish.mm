@@ -75,7 +75,7 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
     stdoutTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(stdoutTimer,
                               dispatch_time(DISPATCH_TIME_NOW, 0), // Start immediately
-                              0.1 * NSEC_PER_SEC,                  // 100 ms inteval
+                              0.001 * NSEC_PER_SEC,                // 1 ms interval (reduced from 100ms)
                               0);                                  // Tolerance
 
     dispatch_source_set_event_handler(stdoutTimer, ^{
@@ -107,7 +107,7 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
     stderrTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(stderrTimer,
                               dispatch_time(DISPATCH_TIME_NOW, 0), // Start immediately
-                              0.1 * NSEC_PER_SEC,                  // 100 ms interval
+                              0.001 * NSEC_PER_SEC,                // 1 ms interval (reduced from 100ms)
                               0);                                  // Tolerance
 
     dispatch_source_set_event_handler(stderrTimer, ^{

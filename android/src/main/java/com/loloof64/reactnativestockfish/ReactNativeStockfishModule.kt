@@ -32,8 +32,7 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun stockfishLoop() {
-    val delayTimeMs = 10L  // Reduced from 100ms to 10ms for 10x faster response (Quick fix for polling bottleneck)
-    // Run main() in a separate thread, not in a coroutine
+    val delayTimeMs = 1L  // Reduced from 10ms to 1ms for 10x faster response
     Thread {
       Thread.sleep(delayTimeMs)
       main()
