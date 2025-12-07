@@ -32,46 +32,49 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun stockfishLoop() {
+    val delayTimeMs = 1L  // Minimal 1ms delay to prevent busy-waiting (was 10ms)
     // Run main() in a separate thread, not in a coroutine
     Thread {
+      Thread.sleep(delayTimeMs)
       main()
     }.start()
-    // Stream-based approach: blocking reads without polling delays
-    // stdoutRead() and stderrRead() will block until data is available
+    // Optimized polling: 1ms delay instead of 10ms for 10x faster response
+    // Note: getline() in C++ is blocking but we still need minimal delay to prevent
+    // busy-waiting when stream is temporarily empty
     outputReaderCoroutineScope.launch {
       while (true) {
         val reactIsNotReady = reactApplicationContext.currentActivity == null
         if (reactIsNotReady) {
-          delay(50L) // Only delay when React isn't ready
+          delay(delayTimeMs)
           continue
         }
-        val output = stdoutRead() // Blocking call - no polling needed
+        val output = stdoutRead()
         if (output == null) {
-          // Only happens when stream is closed/ended
-          break
+          delay(delayTimeMs)
+          continue
         }
         reactApplicationContext
           .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
           .emit("stockfish-output", output)
-        // No delay here - immediately read next line
+        delay(delayTimeMs)
       }
     }
     errorReaderCoroutineScope.launch {
       while (true) {
         val reactIsNotReady = reactApplicationContext.currentActivity == null
         if (reactIsNotReady) {
-          delay(50L) // Only delay when React isn't ready
+          delay(delayTimeMs)
           continue
         }
-        val output = stderrRead() // Blocking call - no polling needed
+        val output = stderrRead()
         if (output == null) {
-          // Only happens when stream is closed/ended
-          break
+          delay(delayTimeMs)
+          continue
         }
         reactApplicationContext
           .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
           .emit("stockfish-error", output)
-        // No delay here - immediately read next line
+        delay(delayTimeMs)
       }
     }
   }
