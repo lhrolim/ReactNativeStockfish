@@ -2547,6 +2547,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@loloof64/react-native-stockfish@github:lhrolim/ReactNativeStockfish":
+  version: 0.3.2
+  resolution: "@loloof64/react-native-stockfish@https://github.com/lhrolim/ReactNativeStockfish.git#commit=41f54e693e4da5c87511cfd55996669a16a0acf4"
+  dependencies:
+    "@loloof64/react-native-stockfish": "github:lhrolim/ReactNativeStockfish"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: cbac7e8feb3e273e43f3bd614a665dc29362889c56e6784d6434265a3acf212422635fdb23fc55e48201079f9729fe5edcb6150a6c3bda6ed60b0808eca52eb6
+  languageName: node
+  linkType: hard
+
 "@loloof64/react-native-stockfish@workspace:.":
   version: 0.0.0-use.local
   resolution: "@loloof64/react-native-stockfish@workspace:."
@@ -2556,6 +2568,7 @@ __metadata:
     "@eslint/eslintrc": ^3.3.1
     "@eslint/js": ^9.35.0
     "@evilmartians/lefthook": ^1.12.3
+    "@loloof64/react-native-stockfish": "github:lhrolim/ReactNativeStockfish"
     "@react-native-community/cli": 20.0.1
     "@react-native/babel-preset": 0.81.1
     "@react-native/eslint-config": ^0.81.1

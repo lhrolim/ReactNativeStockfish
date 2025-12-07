@@ -62,80 +62,86 @@ RCT_EXPORT_METHOD(sendCommandToStockfish:(NSString *)command) {
 
 - (void)startTimerForStdoutReading {
     if (stdoutTimer) {
-        RCTLogInfo(@"Stdout timer is already running.");
+        RCTLogInfo(@"Stdout reader is already running.");
         return;
     }
 
-    RCTLogInfo(@"Stdout timer is starting.");
+    RCTLogInfo(@"Stdout stream reader is starting.");
 
-    // Create dedicated queue
+    // Create dedicated queue for continuous reading
     dispatch_queue_t queue = dispatch_queue_create("com.reactnativestockfish.stdout", DISPATCH_QUEUE_SERIAL);
 
-    // Create timer
-    stdoutTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-    dispatch_source_set_timer(stdoutTimer,
-                              dispatch_time(DISPATCH_TIME_NOW, 0), // Start immediately
-                              0.1 * NSEC_PER_SEC,                  // 100 ms inteval
-                              0);                                  // Tolerance
+    // Use a simple flag to track if we should continue reading
+    // We store the dispatch source just to keep a reference, but we're using async not timer
+    stdoutTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_ADD, 0, 0, queue);
 
-    dispatch_source_set_event_handler(stdoutTimer, ^{
-        const char *output = reactnativestockfish::stockfish_stdout_read();
-        if (output) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendEventWithName:@"stockfish-output" body:@(output)];
-            });
+    // Stream-based continuous reading - no polling delays
+    dispatch_async(queue, ^{
+        while (stdoutTimer) { // Check if still active
+            const char *output = reactnativestockfish::stockfish_stdout_read(); // Blocking read
+            if (output) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self sendEventWithName:@"stockfish-output" body:@(output)];
+                });
+                // No delay - immediately read next line
+            } else {
+                // Stream ended or closed
+                break;
+            }
         }
+        RCTLogInfo(@"Stdout stream reader ended.");
     });
 
-    dispatch_resume(stdoutTimer); // Start timer
-
-    RCTLogInfo(@"Stdout timer is started.");
+    RCTLogInfo(@"Stdout stream reader started.");
 }
 
 - (void)startTimerForStderrReading {
     if (stderrTimer) {
-        RCTLogInfo(@"Stderr timer is already running.");
+        RCTLogInfo(@"Stderr reader is already running.");
         return;
     }
 
-    RCTLogInfo(@"Stderr timer is starting.");
+    RCTLogInfo(@"Stderr stream reader is starting.");
 
-    // Create dedicated queue
+    // Create dedicated queue for continuous reading
     dispatch_queue_t queue = dispatch_queue_create("com.reactnativestockfish.stderr", DISPATCH_QUEUE_SERIAL);
 
-    // Create timer
-    stderrTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-    dispatch_source_set_timer(stderrTimer,
-                              dispatch_time(DISPATCH_TIME_NOW, 0), // Start immediately
-                              0.1 * NSEC_PER_SEC,                  // 100 ms interval
-                              0);                                  // Tolerance
+    // Use a simple flag to track if we should continue reading
+    // We store the dispatch source just to keep a reference, but we're using async not timer
+    stderrTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_ADD, 0, 0, queue);
 
-    dispatch_source_set_event_handler(stderrTimer, ^{
-        const char *error = reactnativestockfish::stockfish_stderr_read();
-        if (error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendEventWithName:@"stockfish-error" body:@(error)];
-            });
+    // Stream-based continuous reading - no polling delays
+    dispatch_async(queue, ^{
+        while (stderrTimer) { // Check if still active
+            const char *error = reactnativestockfish::stockfish_stderr_read(); // Blocking read
+            if (error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self sendEventWithName:@"stockfish-error" body:@(error)];
+                });
+                // No delay - immediately read next line
+            } else {
+                // Stream ended or closed
+                break;
+            }
         }
+        RCTLogInfo(@"Stderr stream reader ended.");
     });
 
-    dispatch_resume(stderrTimer); // Start timer
-
-    RCTLogInfo(@"Sterr timer is started.");
+    RCTLogInfo(@"Stderr stream reader started.");
 }
 
 - (void)stopTimers {
     if (stdoutTimer) {
-        RCTLogInfo(@"Stdout timer is being stopped.");
+        RCTLogInfo(@"Stdout stream reader is being stopped.");
         dispatch_source_cancel(stdoutTimer);
         stdoutTimer = nil;
-        RCTLogInfo(@"Stdout timer is stopped.");
+        RCTLogInfo(@"Stdout stream reader is stopped.");
     }
     if (stderrTimer) {
-        RCTLogInfo(@"Stderr timer is being stopped.");
+        RCTLogInfo(@"Stderr stream reader is being stopped.");
         dispatch_source_cancel(stderrTimer);
         stderrTimer = nil;
-        RCTLogInfo(@"Stderr timer is stopped.");
+        RCTLogInfo(@"Stderr stream reader is stopped.");
     }
 }
 
