@@ -15,6 +15,8 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   // Static/companion state to ensure only one instance runs at a time
   // This is critical for Metro reload where new module instances are created
   companion object {
+    const val NAME = "ReactNativeStockfish"
+    
     @Volatile
     private var globalIsRunning = false
     private var globalOutputReaderCoroutineScope: CoroutineScope? = null
@@ -169,9 +171,5 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
     globalStockfishThread = null
     globalOutputReaderCoroutineScope = null
     globalErrorReaderCoroutineScope = null
-  }
-
-  companion object {
-    const val NAME = "ReactNativeStockfish"
   }
 }
