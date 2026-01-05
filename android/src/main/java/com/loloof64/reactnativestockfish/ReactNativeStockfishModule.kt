@@ -13,8 +13,10 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   private val mainCoroutineScope = CoroutineScope(Dispatchers.Default)
-  private val outputReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
-  private val errorReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
+  private var outputReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
+  private var errorReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
+  private var stockfishThread: Thread? = null
+  private var isRunning = false
 
   external fun main()
   external fun stdoutRead(): String?
@@ -32,13 +34,29 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun stockfishLoop() {
+    // Stop any existing instance before starting a new one (important for Metro reload)
+    if (isRunning) {
+      stopStockfish()
+      // Wait a bit for cleanup to complete
+      Thread.sleep(200)
+    }
+    
+    isRunning = true
     val delayTimeMs = 1L  // Reduced from 10ms to 1ms for 10x faster response
-    Thread {
+    
+    // Create new coroutine scopes for fresh start
+    outputReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
+    errorReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
+    
+    stockfishThread = Thread {
       Thread.sleep(delayTimeMs)
       main()
-    }.start()
+      isRunning = false
+    }
+    stockfishThread?.start()
+    
     outputReaderCoroutineScope.launch {
-      while (true) {
+      while (isRunning) {
         val reactIsNotReady = reactApplicationContext.currentActivity == null
         if (reactIsNotReady) {
           delay(delayTimeMs)
@@ -49,14 +67,18 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
           delay(delayTimeMs)
           continue
         }
-        reactApplicationContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-          .emit("stockfish-output", output)
+        try {
+          reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit("stockfish-output", output)
+        } catch (e: Exception) {
+          // React context might be invalid during Metro reload, just continue
+        }
         delay(delayTimeMs)
       }
     }
     errorReaderCoroutineScope.launch {
-      while (true) {
+      while (isRunning) {
         val reactIsNotReady = reactApplicationContext.currentActivity == null
         if (reactIsNotReady) {
           delay(delayTimeMs)
@@ -67,9 +89,13 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
           delay(delayTimeMs)
           continue
         }
-        reactApplicationContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-          .emit("stockfish-error", output)
+        try {
+          reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit("stockfish-error", output)
+        } catch (e: Exception) {
+          // React context might be invalid during Metro reload, just continue
+        }
         delay(delayTimeMs)
       }
     }
@@ -77,14 +103,19 @@ class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun sendCommandToStockfish(command: String) {
-    stdinWrite(command)
+    if (isRunning) {
+      stdinWrite(command)
+    }
   }
 
   @ReactMethod
   fun stopStockfish() {
+    isRunning = false
     outputReaderCoroutineScope.cancel()
     errorReaderCoroutineScope.cancel()
     sendCommandToStockfish("quit\n")
+    stockfishThread?.interrupt()
+    stockfishThread = null
   }
 
   companion object {
