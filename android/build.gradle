@@ -92,4 +92,10 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  
+  // Note: For New Architecture, React Native's build system automatically:
+  // - Runs codegen to generate NativeReactNativeStockfishSpec base class
+  // - Provides TurboModule dependencies via react-android
+  // - Links the codegen library automatically
+  // No additional dependencies needed here.
 }

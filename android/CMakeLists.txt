@@ -37,3 +37,8 @@ include_directories(
             ../cpp/stockfish/src/nnue/layers
             ../cpp/stockfish/src/syzygy
 )
+
+# Note: For New Architecture, React Native's build system automatically handles
+# codegen and linking. The codegen target (react_codegen_RNReactNativeStockfishSpec)
+# is created in the app's build directory, not the library's build directory.
+# We don't need to manually link it here - React Native's autolinking handles it.
